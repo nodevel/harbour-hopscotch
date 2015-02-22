@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=harbour-hopscotch
+Exec=harbour-hopscotch
+Name=Hopscotch
+# translation example:
+# your app name in German locale (de)
+Name[de]=Hopscotch
+
