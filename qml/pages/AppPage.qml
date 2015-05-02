@@ -24,11 +24,11 @@ Page {
             MenuItem {
                 id: downloadMenu
                 text: qsTr("Download")
-                onClicked: download()
+                onClicked: download(param.id)
             }
             MenuItem {
                 text: qsTr('Install')
-                onClicked: install()
+                onClicked: install(param.id)
             }
         }
 
@@ -120,7 +120,7 @@ Page {
         loading = true
         var type_tmp = param.type
         py.call('hop_parser.app', [param.id, language], function(result) {
-            console.log(Object.keys(result))
+//            console.log(Object.keys(result))
             param = result
             param.type = type_tmp
             for (var i = 0; i < result.recommendations.length; i++) {
@@ -132,7 +132,6 @@ Page {
             loading = false
         });
         favorite = storage.inFavorites(param)
-        console.log(favorite)
     }
     function download(app_id) {
         remorse.execute("Starting download", function() { getApp(app_id, false) })

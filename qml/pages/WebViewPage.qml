@@ -47,7 +47,7 @@ Page {
                             remorse.execute("Adding to favorites", function() { storage.saveFavorite(param); favorite = true })
                         }
                     }
-                    enabled: (String(webview.url).indexOf('/apps/details?id=') > -1)
+                    enabled: downloadMenu.enabled
                 }
                 MenuItem {
                     id: downloadMenu

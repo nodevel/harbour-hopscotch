@@ -14,7 +14,7 @@ Name:       harbour-hopscotch
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    An unofficial Google Play client
 Version:    0.2
-Release:    1
+Release:    2
 Group:      Applications/System
 License:    GPL
 URL:        http://example.org/
