@@ -30,7 +30,24 @@ OTHER_FILES += qml/harbour-hopscotch.qml \
     qml/pages/components/PasswordDialog.qml \
     qml/pages/components/InputDialog.qml \
     qml/pages/AboutPage.qml \
-    qml/cover/cover.png
+    qml/cover/cover.png \
+    qml/pages/GridPage.qml \
+    qml/pages/components/CustomXmlModel.qml \
+    qml/pages/AppPage.qml \
+    qml/py/hop_parser.py \
+    qml/pages/components/RatingIndicator.qml \
+    qml/pages/components/GridItem.qml \
+    qml/py/LICENSE \
+    qml/py/README \
+    qml/py/AssetRequest.py \
+    qml/py/compat.py \
+    qml/py/ExtendedOptionParser.py \
+    qml/py/hopscotch.py \
+    qml/py/Market.py \
+    qml/py/OperatorModel.py \
+    qml/py/server.py \
+    qml/py/Util.py \
+    qml/py/ProtocolBuffer.py
 
 # to disable building translations every time, comment out the
 # following CONFIG line

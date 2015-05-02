@@ -13,7 +13,7 @@ Name:       harbour-hopscotch
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    An unofficial Google Play client
-Version:    0.1
+Version:    0.2
 Release:    1
 Group:      Applications/System
 License:    GPL
@@ -21,6 +21,7 @@ URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-hopscotch.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
+Requires: pyotherside-qml-plugin-python3-qt5 >= 1.3
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
