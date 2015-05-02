@@ -7,6 +7,7 @@ class Util:
 
     @staticmethod
     def download_apk(package, url, market_da, path='/tmp'):
+        print('downloading')
         filename = path + '/' + "%s.apk" % package
 
         if os.path.exists(filename):
@@ -16,6 +17,7 @@ class Util:
         with open(filename, 'wb') as f:
             req = Util._create_request(url, market_da)
             f.write(req.read())
+        print('done')
 
     @staticmethod
     def download_apk_stream(package, url, market_da):

@@ -9,13 +9,20 @@ ApplicationWindow
 {
     id: window
     initialPage: Component { FirstPage { } }
+//    initialPage: Component { GridPage { query: 'pubtran' } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     property string email
     property string password
     property string device_id
-    property int operator
+    property string country
+    property string operator
     property int sdklevel
     property bool busy
+    property bool loading
+    property int perPage: 24
+
+    property string language: 'en'
+    property string export_path: '/home/nemo/hopscotch_favorites.json'
     Python {
         id: py
 
@@ -25,11 +32,14 @@ ApplicationWindow
             password = storage.getSetting('password', '')
             device_id = storage.getSetting('device_id', '')
 
-            operator = storage.getSetting('operator', 0)
+            country = storage.getSetting('country', '')
+            operator = storage.getSetting('operator', '')
             sdklevel = storage.getSetting('sdklevel', 19)
 
             addImportPath(Qt.resolvedUrl('./py'));
             importModule('hopscotch', function () {
+            }) // Importing module
+            importModule('hop_parser', function () {
             }) // Importing module
             setHandler('upload_progress', function (index, progress) {
                 uploadModel.set(index, {'progress': progress})
@@ -61,7 +71,7 @@ ApplicationWindow
             path = '/home/nemo/Downloads'
         }
         notify('info', 'Downloading '+appId+'...')
-        py.call('hopscotch.download', [appId, email, password, operator, device_id, path], function(result) {
+        py.call('hopscotch.download', [appId, email, password, country, operator, device_id, path], function(result) {
             if (result) { // checking if the download was successful
                 if (install) {
                     Qt.openUrlExternally(path + '/' + appId + '.apk')
@@ -84,7 +94,7 @@ ApplicationWindow
 
     }
     BusyIndicator {
-        running: busy
+        running: (busy || loading)
         anchors.centerIn: parent
         size: BusyIndicatorSize.Large
     }
@@ -104,12 +114,20 @@ ApplicationWindow
     signal inputDialog ( string type )
     onInputDialog: {
         // workaround for an error
-        if (type == 'url' || type == 'search' || type == 'id') {
+        if (type == 'search') {
+            var dialog = pageStack.push(Qt.resolvedUrl("pages/components/InputDialog.qml"), { 'type': type })
+            dialog.accepted.connect(function() {
+                dialogTimerNew.query = dialog.output
+                dialogTimerNew.start()
+            })
+        } else if (type == 'url' || type == 'id') {
             pageStack.pop(null)
             pageStack.completeAnimation()
             var dialog = pageStack.push(Qt.resolvedUrl("pages/components/InputDialog.qml"), { 'type': type })
             dialog.accepted.connect(function() {
+                if (dialog.output.indexOf("play.google.com") === -1) type = 'id'
                 var url = { 'search': 'https://play.google.com/store/search?q=', 'id': 'https://play.google.com/store/apps/details?id=', 'url': '' }[type]
+
                 dialogTimer.url = url+dialog.output
                 dialogTimer.start()
             })
@@ -123,9 +141,20 @@ ApplicationWindow
         repeat: false
         running: false
         onTriggered: {
-            pageStack.push(Qt.resolvedUrl("pages/WebViewPage.qml"), { 'url': url } )
+            pageStack.completeAnimation()
+            pageStack.push(Qt.resolvedUrl("pages/AppPage.qml"), { 'param': {'id': url} } )
         }
-
+    }
+    Timer {
+        id: dialogTimerNew
+        property string query
+        interval: 500
+        repeat: false
+        running: false
+        onTriggered: {
+            pageStack.completeAnimation()
+            pageStack.push(Qt.resolvedUrl("pages/GridPage.qml"), { 'query': query } )
+        }
     }
 }
 

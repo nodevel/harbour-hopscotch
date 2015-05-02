@@ -4,6 +4,7 @@ import Sailfish.Silica 1.0
 
 Page {
     id: page
+    objectName: "menu"
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaListView {
@@ -47,6 +48,8 @@ Page {
                         pageStack.push(Qt.resolvedUrl("WebViewPage.qml"), { 'url': 'https://play.google.com' });
                     case 'about':
                         pageStack.push(Qt.resolvedUrl("AboutPage.qml"), { } )
+                    case 'favorites':
+                        pageStack.push(Qt.resolvedUrl("GridPage.qml"), { 'category': category, 'query': 'Favorites' } )
                     default:
                         inputDialog(category);
                 }
@@ -67,14 +70,14 @@ Page {
             category: 'search'
         }
         ListElement {
-            title: 'Open URL'
+            title: 'Open URL/ID'
             icon: "image://theme/icon-m-region"
             category: 'url'
         }
         ListElement {
-            title: 'App ID'
-            icon: "image://theme/icon-m-link"
-            category: 'id'
+            title: 'Favorites'
+            icon: "image://theme/icon-m-favorite"
+            category: 'favorites'
         }
         ListElement {
             title: 'About'
@@ -90,7 +93,7 @@ Page {
         repeat: false
         running: false
         onTriggered: {
-            //
+            pageStack.completeAnimation()
             if (!email) {
                 pageStack.push(Qt.resolvedUrl("WizardPage.qml"), { })
             } else if (!password) {
@@ -98,9 +101,17 @@ Page {
                 dialog.accepted.connect(function() {
                     // TODO notification
                     notify('info', 'Password set.')
+                    if (inputUrl) load_input()
                 })
+            } else if (inputUrl) {
+                load_input()
             }
         }
+    }
+    signal load_input
+    onLoad_input: {
+        console.log(inputUrl)
+        pageStack.push(Qt.resolvedUrl("AppPage.qml"), { 'param': { 'id': inputUrl } })
     }
 }
 

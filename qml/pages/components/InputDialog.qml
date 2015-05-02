@@ -5,6 +5,7 @@ Dialog {
     id: dialog
     property string output
     property string type
+    property string text
 
     Column {
         width: parent.width
@@ -15,7 +16,7 @@ Dialog {
             text: dialog.text
             focus: true
             anchors { left: parent.left; right: parent.right }
-            label: { 'search': "Search term", 'id': "Application ID", 'url': 'URL' }[type]
+            label: { 'search': "Search term", 'url': "URL/Application ID" }[type]
             placeholderText: label
             EnterKey.enabled: text
             EnterKey.iconSource: "image://theme/icon-m-search"
@@ -24,9 +25,5 @@ Dialog {
             }
         }
     }
-    onDone: {
-        if (result === DialogResult.Accepted) {
-            output = inputField.text
-        }
-    }
+    onAccepted: output = inputField.text
 }

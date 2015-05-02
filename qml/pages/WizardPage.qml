@@ -1,7 +1,17 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Page {
+Dialog {
+    id: dialog1
+    acceptDestination: secondPage
+    onAccepted: {
+        password = passwordField.text
+        email = emailField.text
+        storage.setSetting('email', email)
+        if (passwordSwitch.checked) {
+            storage.setSetting('password', password)
+        }
+    }
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height + Theme.paddingLarge
@@ -51,15 +61,7 @@ Page {
                 label: qsTr("Password"); placeholderText: label
                 EnterKey.enabled: text || inputMethodComposing
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: {
-                    password = text
-                    email = emailField.text
-                    storage.setSetting('email', email)
-                    if (passwordSwitch.checked) {
-                        storage.setSetting('password', password)
-                    }
-                    pageStack.push(secondPage, {}, PageStackAction.Animated)
-                }
+                EnterKey.onClicked: dialog1.accept()
             }
             TextSwitch {
                 id: passwordSwitch
@@ -72,6 +74,13 @@ Page {
                     storage.setSetting('save_password', checked)
                 }
             }
+            Button {
+                id: nextButton1
+                text: qsTr('Next')
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: dialog1.accept()
+            }
+
             Label {
                 anchors { horizontalCenter: parent.horizontalCenter }
                 width: parent.width - 2*Theme.paddingLarge
@@ -90,8 +99,14 @@ Page {
 
     Component {
         id: secondPage
-        Page {
-            backNavigation: true
+        Dialog {
+            id: dialog2
+            acceptDestination: thirdPage
+            onAccepted: {
+                device_id = androidField.text
+                storage.setSetting('device_id', device_id)
+            }
+
             SilicaFlickable {
                 anchors.fill: parent
                 contentHeight: column.height + Theme.paddingLarge
@@ -113,11 +128,7 @@ Page {
                         label: qsTr("Device ID"); placeholderText: label
                         EnterKey.enabled: text || inputMethodComposing
                         EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                        EnterKey.onClicked: {
-                            device_id = text
-                            storage.setSetting('device_id', device_id)
-                            pageStack.push(thirdPage, {}, PageStackAction.Animated)
-                        }
+                        EnterKey.onClicked: dialog2.accept()
                     }
                     Label {
                         anchors { horizontalCenter: parent.horizontalCenter }
@@ -143,6 +154,12 @@ Page {
                         text: qsTr('The second option is for those who do not own an Android phone. Open your computer and install the program "Google Play Downloader" from https://codingteam.net/project/googleplaydownloader - it should work on all major systems (Linux, Mac, Windows,... ). Launch it, go to Settings-Configure and click on "Generate new Android ID". Then type the generated Android ID code here, in the box above.')
                         wrapMode: Text.Wrap
                     }
+                    Button {
+                        id: nextButton2
+                        text: qsTr('Next')
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: dialog2.accept()
+                    }
                 } //  Column
             } // Flickable
         }
@@ -150,8 +167,14 @@ Page {
 
     Component {
         id: thirdPage
-        Page {
-            backNavigation: true
+        Dialog {
+            id: dialog3
+            onAccepted: {
+                storage.setSetting('operator', operator)
+                storage.setSetting('country', country)
+                pageStack.clear(PageStackAction.Immediate)
+                pageStack.push(Qt.resolvedUrl("FirstPage.qml"))
+            }
 
             Column {
                 anchors { left: parent.left; right: parent.right }
@@ -182,7 +205,7 @@ Page {
                         fillOperators(currentIndex)
                         operatorCombo.currentIndex = 0
                         operatorCombo.currentOperator = operatorsModel.get(0).name
-                        operator = parseInt(operatorDict[currentCountry][operatorCombo.currentOperator])
+                        country = currentCountry
                     }
                 }
                 ComboBox {
@@ -197,18 +220,14 @@ Page {
                      }
                     onCurrentIndexChanged: {
                         currentOperator = operatorsModel.get(currentIndex).name
-                        operator = parseInt(operatorDict[countryCombo.currentCountry][currentOperator])
+                        operator = currentOperator
                     }
                 }
                 Button {
                     text: qsTr('Finish')
-                    enabled: (operator > 0)
+                    enabled: (operator)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: {
-                        storage.setSetting('operator', operator)
-                        pageStack.clear()
-                        pageStack.push(firstPage, {}, PageStackAction.Animated)
-                    }
+                    onClicked: dialog3.accept()
                 }
             }
             Component.onCompleted: fillCountries()

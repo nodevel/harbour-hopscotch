@@ -21,9 +21,10 @@ from Market import Market
 from OperatorModel import Operator
 from AssetRequest import AssetRequest
 from Util import Util
+import json
 
 
-def download(package, email, password, operator, device, path='/tmp', devname='passion', sdklevel=19):
+def download(package, email, password, country, operator, device, path='/tmp', devname='passion', sdklevel=19):
     try:
         if not package:
             raise ValueError('No package')
@@ -34,5 +35,21 @@ def download(package, email, password, operator, device, path='/tmp', devname='p
         (url, market_da)    = market.get_asset( request.encode() )
         Util.download_apk(package, url, market_da, path)
         return True
+    except:
+        return False
+
+def export_favorites(obj, path='/home/nemo/hopscotch_favorites.json'):
+    try:
+        with open(path, 'w') as json_file:
+            json.dump(obj, json_file)
+        return True
+    except:
+        return False
+
+def import_favorites(path='/home/nemo/hopscotch_favorites.json'):
+    try:
+        with open(path) as json_file:
+            data = json.load(json_file)
+        return data
     except:
         return False
