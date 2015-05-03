@@ -172,6 +172,8 @@ class AppHTMLParser(HTMLParser):
                     if self.take_recommendation:
                         self.output['recommendations'].append(value)
                         self.in_recommendation = False
+                elif name == 'data-unallowed-docid':
+                    self.output['id'] = value
                         
         elif (tag == 'a') and self.in_details:
             for name, value in attrs:
@@ -295,16 +297,15 @@ def _get_apps(url):
     #xmlstring = str(ET.tostring(parser.output, "utf-8").decode("utf-8")) # gets the generated xml
     return parser.output # returns the xml
 
-def app(app_id, hl='en', url=''):
+def app(app_id, hl='en'):
     if app_id.startswith("market://"):
         url = "https://play.google.com/store/apps/"+app_id.split('rket://')[1]
-    elif "play.google.com" in url:
+    elif "play.google.com" in app_id:
         url = app_id
     else:
-        url = ('https://play.google.com/store/apps/details'
-               '?id=%s&hl=%s') % (app_id, hl)
+        url = ('https://play.google.com/store/apps/details?id=%s&hl=%s') % (app_id, hl)
     parser = AppHTMLParser(url) # creates new object from the parser class
-    parser.output['id'] = app_id
+#    parser.output['id'] = app_id
     return parser.output # returns the object
 
 

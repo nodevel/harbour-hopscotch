@@ -38,10 +38,10 @@ Page {
             spacing: Theme.paddingMedium
             //
             PageHeader {
-                title: param.name
+                title: (param.name !== undefined) ? param.name : qsTr('Loading')
             }
             Image {
-                source: param.cover
+                source: (param.cover !== undefined) ? param.cover : "image://theme/icon-store-app-default"
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
                 height: width
@@ -52,20 +52,20 @@ Page {
             RatingIndicator {
                 height: Theme.paddingLarge
                 maximumValue: 5
-                ratingValue: param.rating
+                ratingValue: (param.rating !== undefined) ? param.rating : 0
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             DetailItem {
                 label: "Votes"
-                value: param.votes
+                value: (param.votes !== undefined) ? param.votes : ''
             }
             DetailItem {
                 label: "Price"
-                value: param.price ? param.price : 'Free'
+                value: (param.price !== undefined) ? ((param.price == 0) ? qsTr('Free') : param.price ) : ''
             }
             DetailItem {
                 label: "Author"
-                value: param.author
+                value: (param.author !== undefined) ? param.author : ''
                 // author_id
                 MouseArea {
                     anchors.fill: parent
@@ -75,42 +75,42 @@ Page {
             }
             DetailItem {
                 label: "Version"
-                value: param.version
+                value: (param.version !== undefined) ? param.version : ''
             }
             DetailItem {
                 label: "Date"
-                value: param.date
+                value: (param.date !== undefined) ? param.date : ''
             }
             DetailItem {
                 label: "Size"
-                value: param.size
+                value: (param.size !== undefined) ? param.size : ''
             }
             DetailItem {
                 label: "Downloads"
-                value: param.downloads
+                value: (param.downloads !== undefined) ? param.downloads : ''
             }
             DetailItem {
                 label: "Category"
-                value: param.category
+                value: (param.category !== undefined) ? param.category : ''
             }
-            Label {
-                text: param.description
-                width: parent.width - 2*Theme.paddingLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                wrapMode: Text.Wrap
-                font.pixelSize: Theme.fontSizeSmall
-                truncationMode: TruncationMode.Fade
-                color: Theme.primaryColor
-            }
-            Label {
-                text: param.subtitle
-                width: parent.width - 2*Theme.paddingLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                wrapMode: Text.Wrap
-                font.pixelSize: Theme.fontSizeSmall
-                truncationMode: TruncationMode.Fade
-                color: Theme.secondaryColor
-            }
+//            Label {
+//                text: (param.description !== undefined) ? param.description : ''
+//                width: parent.width - 2*Theme.paddingLarge
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                wrapMode: Text.Wrap
+//                font.pixelSize: Theme.fontSizeSmall
+//                truncationMode: TruncationMode.Fade
+//                color: Theme.primaryColor
+//            }
+//            Label {
+//                text: (param.subtitle !== undefined) ? param.subtitle : ''
+//                width: parent.width - 2*Theme.paddingLarge
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                wrapMode: Text.Wrap
+//                font.pixelSize: Theme.fontSizeSmall
+//                truncationMode: TruncationMode.Fade
+//                color: Theme.secondaryColor
+//            }
 
         }
     }

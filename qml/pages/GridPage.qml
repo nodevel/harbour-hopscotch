@@ -86,7 +86,6 @@ Page {
                     horizontalCenter: parent.horizontalCenter
                     top: parent.top
                 }
-                Component.onCompleted: console.log(cover)
             }
             Label {
                 id: nameLabel
@@ -124,8 +123,7 @@ Page {
             }
 
             onClicked: {
-                var priceTmp = (price) ? price : ''
-                pageStack.push(Qt.resolvedUrl("AppPage.qml"), { 'param': { 'id': Id, 'name': name, 'author': '', 'price': priceTmp, 'rating': rating/20, 'type': subcategory, 'cover': cover } } )
+                pageStack.push(Qt.resolvedUrl("AppPage.qml"), { 'param': { 'id': Id, 'name': name, 'author': '', 'price': '', 'rating': rating/20, 'type': subcategory, 'cover': cover } } )
             }
             BusyIndicator {
                 anchors.centerIn: parent
@@ -161,10 +159,7 @@ Page {
                 }
                 loading = false
             } else {
-                console.log("Load")
                 py.call('hop_parser.'+category, [query, subcategory, page_n, perPage], function(result) {
-                    console.log(result)
-                    console.log(Object.keys(result[1]))
                     for (var i = 0; i < result.length; i++) {
                         listModel.append(result[i])
                     }
